@@ -88,9 +88,6 @@ class Node extends Record {
  */
 global $UTF8_ROMANIZATION;
 if(empty($UTF8_ROMANIZATION)) $UTF8_ROMANIZATION = array(
-  // scandinavian - differs from what we do in deaccent
-  'å'=>'a','Å'=>'A','ä'=>'a','Ä'=>'A','ö'=>'o','Ö'=>'O',
-    
   // various accents - added by mvdkleijn
   'á'=>'a','à'=>'a','â'=>'a','ą'=>'a',
   'ć'=>'c','č'=>'c','ç'=>'c','ц'=>'c',
@@ -124,6 +121,9 @@ if(empty($UTF8_ROMANIZATION)) $UTF8_ROMANIZATION = array(
   'я'=>'ya',
   'ю'=>'yu',
   'ж'=>'zh',
+    
+  // scandinavian - differs from what we do in deaccent
+  'å'=>'a','Å'=>'A','ä'=>'a','Ä'=>'A','ö'=>'o','Ö'=>'O',
 
   //russian cyrillic
   'а'=>'a','А'=>'A','б'=>'b','Б'=>'B','в'=>'v','В'=>'V','г'=>'g','Г'=>'G',
