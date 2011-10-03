@@ -414,6 +414,7 @@ class Record {
 
     public static $__CONN__ = false;
     public static $__QUERIES__ = array();
+    public $__DIRTY__ = array();
 
     /**
      * Sets a static reference for the connection to the database.
@@ -702,7 +703,14 @@ class Record {
      * sql query.
      */
     public function getColumns() {
-        return array_keys(get_object_vars($this));
+        $fields = array_keys(get_object_vars($this));
+        
+        $key = array_search('__DIRTY__', $fields);
+        if ($key !== false) {
+            unset($fields[$key]);
+        }
+        
+        return array_values($fields);
     }
 
     /**
@@ -876,6 +884,14 @@ class Record {
         self::logQuery($sql);
 
         return (int) $stmt->fetchColumn();
+    }
+
+    
+    public function isDirty() {
+        if (count($this->__DIRTY__))
+            return false;
+        else
+            return true;
     }
 
 }
