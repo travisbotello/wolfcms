@@ -414,7 +414,8 @@ class Record {
 
     public static $__CONN__ = false;
     public static $__QUERIES__ = array();
-    public $__DIRTY__ = array();
+    private $__DIRTY__ = array();
+    private $dirty = false;
 
     /**
      * Sets a static reference for the connection to the database.
@@ -672,7 +673,13 @@ class Record {
      *
      * @return boolean True if the actions succeeded.
      */
-    public function afterSave() { return true; }
+    public function afterSave() { 
+        if ($this->dirty) {
+            $this->dirty = false;
+        }
+
+        return true;
+    }
 
     /**
      * Allows sub-classes do stuff after a Record is inserted.
@@ -706,6 +713,11 @@ class Record {
         $fields = array_keys(get_object_vars($this));
         
         $key = array_search('__DIRTY__', $fields);
+        if ($key !== false) {
+            unset($fields[$key]);
+        }
+        
+        $key = array_search('dirty', $fields);
         if ($key !== false) {
             unset($fields[$key]);
         }
@@ -888,10 +900,43 @@ class Record {
 
     
     public function isDirty() {
-        if (count($this->__DIRTY__))
-            return false;
-        else
-            return true;
+        return (boolean) $this->dirty;
+    }
+
+
+    /**
+     * Magic method __set used for dirty fields feature.
+     *
+     * @param type $name
+     * @param type $value 
+     */
+    public function __set($name, $value) {
+        /* @todo Remove the line below in the future and force devs to overris getColumns() */
+        /*if (!isset($this->$name)) {
+            $this->$name = null;
+        }*/
+        
+        if (in_array($name, $this->getColumns())) {
+            $this->dirty = true;
+            $this->__DIRTY__[$name] = $this->$name;
+            $this->$name = $value;
+        }
+        /* @todo Use this in the future
+        else {
+            throw new ErrorException("Trying to set unknown property '$name' for Record.", 0, E_ERROR);
+        }
+         * 
+         */
+    }
+    
+    public function __get($name) {
+        echo 'TEST-'.$this->$name;
+        return $this->$name;
+    }
+    
+    
+    public function dirtyFields() {
+        return $this->__DIRTY__;
     }
 
 }
