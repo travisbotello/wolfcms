@@ -26,14 +26,16 @@ $ctrl = Dispatcher::getController(Setting::get('default_tab'));
 
 // Allow for nice title.
 // @todo improve/clean this up.
-$title = ($ctrl == 'plugin') ? Plugin::$controllers[Dispatcher::getAction()]->label : ucfirst($ctrl).'s';
-if (isset($this->vars['content_for_layout']->vars['action'])) {
-    $tmp = $this->vars['content_for_layout']->vars['action'];
-    $title .= ' - '.ucfirst($tmp);
+if (!isset($title) || trim($title) == '') {
+    $title = ($ctrl == 'plugin') ? Plugin::$controllers[Dispatcher::getAction()]->label : ucfirst($ctrl).'s';
+    if (isset($this->vars['content_for_layout']->vars['action'])) {
+        $tmp = $this->vars['content_for_layout']->vars['action'];
+        $title .= ' - '.ucfirst($tmp);
 
-    if ($tmp == 'edit' && isset($this->vars['content_for_layout']->vars['page'])) {
-        $tmp = $this->vars['content_for_layout']->vars['page'];
-        $title .= ' - '.$tmp->title;
+        if ($tmp == 'edit' && isset($this->vars['content_for_layout']->vars['page'])) {
+            $tmp = $this->vars['content_for_layout']->vars['page'];
+            $title .= ' - '.$tmp->title;
+        }
     }
 }
 ?>
@@ -41,7 +43,8 @@ if (isset($this->vars['content_for_layout']->vars['action'])) {
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
     <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
-    <title><?php use_helper('Kses'); echo kses(Setting::get('admin_title'), array()) . ' - ' . $title; ?></title>
+    
+    <title><?php use_helper('Kses'); echo $title . ' | ' . kses(Setting::get('admin_title'), array()); ?></title>
 
     <link rel="favourites icon" href="<?php echo URI_PUBLIC; ?>wolf/admin/images/favicon.ico" />
     <link href="<?php echo URI_PUBLIC; ?>wolf/admin/stylesheets/admin.css" media="screen" rel="Stylesheet" type="text/css" />
@@ -67,6 +70,9 @@ if (isset($this->vars['content_for_layout']->vars['action'])) {
 <?php if (file_exists(CORE_ROOT . '/plugins/' . $plugin_id . '/' . $plugin_id . '.css')): ?>
     <link href="<?php echo URI_PUBLIC; ?>wolf/plugins/<?php echo $plugin_id.'/'.$plugin_id; ?>.css" media="screen" rel="Stylesheet" type="text/css" />
 <?php endif; ?>
+<?php endforeach; ?>
+<?php foreach(Plugin::$stylesheets as $plugin_id => $stylesheet): ?>
+    <link type="text/css" href="<?php echo URI_PUBLIC; ?>wolf/plugins/<?php echo $stylesheet; ?>" media="screen" rel="Stylesheet" />
 <?php endforeach; ?>
 <?php foreach(Plugin::$javascripts as $jscript_plugin_id => $javascript): ?>
     <script type="text/javascript" charset="utf-8" src="<?php echo URI_PUBLIC; ?>wolf/plugins/<?php echo $javascript; ?>"></script>
@@ -191,7 +197,7 @@ if (isset($this->vars['content_for_layout']->vars['action'])) {
       <p id="site-links">
         <?php echo __('You are currently logged in as'); ?> <a href="<?php echo get_url('user/edit/'.AuthUser::getId()); ?>"><?php echo AuthUser::getRecord()->name; ?></a>
         <span class="separator"> | </span>
-        <a href="<?php echo get_url('login/logout'); ?>"><?php echo __('Log Out'); ?></a>
+        <a href="<?php echo get_url('login/logout'.'?csrf_token='.SecureToken::generateToken(BASE_URL.'login/logout')); ?>"><?php echo __('Log Out'); ?></a>
         <span class="separator"> | </span>
         <a id="site-view-link" href="<?php echo URL_PUBLIC; ?>" target="_blank"><?php echo __('View Site'); ?></a>
       </p>

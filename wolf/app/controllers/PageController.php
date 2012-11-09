@@ -157,7 +157,7 @@ class PageController extends Controller {
         $this->setLayout('backend');
         $this->display('page/edit', array(
             'action' => 'edit',
-            'csrf_token' => SecureToken::generateToken(BASE_URL.'page/edit'),
+            'csrf_token' => SecureToken::generateToken(BASE_URL.'page/edit/'.$page->id),
             'page' => $page,
             'tags' => $page->getTags(),
             'filters' => Filter::findAll(),
@@ -176,6 +176,26 @@ class PageController extends Controller {
      * @param int $id Id of page to delete
      */
     public function delete($id) {
+        // Sanity checks
+        use_helper('Validate');
+        if (!Validate::numeric($id)) {
+            Flash::set('error', __('Invalid input found!'));
+            redirect(get_url());
+        }
+        
+        // CSRF checks
+        if (isset($_GET['csrf_token'])) {
+            $csrf_token = $_GET['csrf_token'];
+            if (!SecureToken::validateToken($csrf_token, BASE_URL.'page/delete/'.$id)) {
+                Flash::set('error', __('Invalid CSRF token found!'));
+                redirect(get_url('page'));
+            }
+        }
+        else {
+            Flash::set('error', __('No CSRF token found!'));
+            redirect(get_url('page'));
+        }
+        
         // security (dont delete the root page)
         if ($id > 1) {
             // find the page to delete
@@ -280,8 +300,6 @@ class PageController extends Controller {
 
         $page = Record::findByIdFrom('Page', $new_root_id);
         $page->position += 1;
-        $page->created_on_time = time();
-        $page->published_on_time = $page->created_on_time;
         $page->save();
 
         $newUrl = URL_PUBLIC;
@@ -295,7 +313,7 @@ class PageController extends Controller {
             $page->slug(),
             $newUrl,
             get_url('page/add', $new_root_id),
-            get_url('page/delete/'.$new_root_id));
+            get_url('page/delete/'.$new_root_id.'?csrf_token='.SecureToken::generateToken(BASE_URL.'page/delete/'.$new_root_id)));
         echo implode('||', $newData);
     }
 
@@ -346,7 +364,9 @@ class PageController extends Controller {
         // CSRF checks
         if (isset($_POST['csrf_token'])) {
             $csrf_token = $_POST['csrf_token'];
-            if (!SecureToken::validateToken($csrf_token, BASE_URL.'page/'.$action)) {
+            $csrf_id = '';
+            if ($action === 'edit') { $csrf_id = '/'.$id; }
+            if (!SecureToken::validateToken($csrf_token, BASE_URL.'page/'.$action.$csrf_id)) {
                 $errors[] = __('Invalid CSRF token found!');
             }
         }

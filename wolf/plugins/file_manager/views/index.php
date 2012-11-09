@@ -51,7 +51,11 @@ if (!defined('IN_CMS')) { exit(); }
 <?php foreach ($files as $file): ?>
     <tr class="<?php echo odd_even(); ?>">
       <td>
+          <?php if (preg_match('/\.(jpg|jpeg|pjpeg|png|gif|ico)$/i', $file->name)) { ?>
+          <img class="thumb" src="<?php echo URI_PUBLIC;?>public/<?php echo $dir.$file->name; ?>" align="middle" />
+          <?php } else { ?>
           <img src="<?php echo ICONS_URI;?>file-<?php echo $file->type ?>-16.png" align="top" />
+          <?php } ?>
           <?php echo $file->link; ?>
       </td>
       <td><code><?php echo $file->size; ?></code></td>
@@ -59,7 +63,7 @@ if (!defined('IN_CMS')) { exit(); }
       <td><code><?php echo $file->mtime; ?></code></td>
       <td>
         <a href="#" onclick="toggle_rename_popup('<?php echo $dir.$file->name; ?>', '<?php echo $file->name; ?>'); return false;" title="<?php echo __('Rename'); ?>"><img src="<?php echo ICONS_URI;?>rename-16.png" alt="rename icon" /></a>
-        <a href="<?php echo get_url('plugin/file_manager/delete/'.$dir.$file->name); ?>" onclick="return confirm('<?php echo __('Are you sure you wish to delete?'); ?> <?php echo $file->name; ?>?');"><img src="<?php echo ICONS_URI;?>delete-16.png" alt="<?php echo __('delete file icon'); ?>" title="<?php echo __('Delete file'); ?>" /></a>
+        <a href="<?php echo get_url('plugin/file_manager/delete/'.$dir.$file->name.'?csrf_token='.SecureToken::generateToken(BASE_URL.'plugin/file_manager/delete/'.$dir.$file->name)); ?>" onclick="return confirm('<?php echo __('Are you sure you wish to delete?'); ?> <?php echo $file->name; ?>?');"><img src="<?php echo ICONS_URI;?>delete-16.png" alt="<?php echo __('delete file icon'); ?>" title="<?php echo __('Delete file'); ?>" /></a>
       </td>
     </tr>
 <?php endforeach; ?>
@@ -72,6 +76,7 @@ if (!defined('IN_CMS')) { exit(); }
     <h3><?php echo __('Change mode'); ?></h3>
     <form action="<?php echo get_url('plugin/file_manager/chmod'); ?>" method="post"> 
       <div>
+        <input id="csrf_token" name="csrf_token" type="hidden" value="<?php echo SecureToken::generateToken(BASE_URL.'plugin/file_manager/chmod'); ?>" />
         <input id="chmod_file_name" name="file[name]" type="hidden" value="" />
         <input id="chmod_file_mode" maxlength="4" name="file[mode]" type="text" value="" /> 
         <input id="chmod_file_button" name="commit" type="submit" value="<?php echo __('Change mode'); ?>" />
@@ -83,6 +88,7 @@ if (!defined('IN_CMS')) { exit(); }
       <h3><?php echo __('Rename'); ?></h3>
       <form action="<?php echo get_url('plugin/file_manager/rename'); ?>" method="post"> 
         <div>
+          <input id="csrf_token" name="csrf_token" type="hidden" value="<?php echo SecureToken::generateToken(BASE_URL.'plugin/file_manager/rename'); ?>" />
           <input id="rename_file_current_name" name="file[current_name]" type="hidden" value="" />
           <input id="rename_file_new_name" maxlength="50" name="file[new_name]" type="text" value="" /> 
           <input id="rename_file_button" name="commit" type="submit" value="<?php echo __('Rename'); ?>" />
@@ -111,6 +117,7 @@ if (!defined('IN_CMS')) { exit(); }
         </div>
         <div class="content">
             <form action="<?php echo get_url('plugin/file_manager/create_file'); ?>" method="post">
+                <input id="csrf_token" name="csrf_token" type="hidden" value="<?php echo SecureToken::generateToken(BASE_URL.'plugin/file_manager/create_file'); ?>" />
                 <input id="create_file_path" name="file[path]" type="hidden" value="<?php echo ($dir == '') ? '/': $dir; ?>" />
                 <input id="create_file_name" maxlength="255" name="file[name]" type="text" value="" />
                 <input id="create_file_button" name="commit" type="submit" value="<?php echo __('Create'); ?>" />
@@ -125,6 +132,7 @@ if (!defined('IN_CMS')) { exit(); }
         </div>
         <div class="content">
             <form action="<?php echo get_url('plugin/file_manager/create_directory'); ?>" method="post">
+                <input id="csrf_token" name="csrf_token" type="hidden" value="<?php echo SecureToken::generateToken(BASE_URL.'plugin/file_manager/create_directory'); ?>" />
                 <input id="create_directory_path" name="directory[path]" type="hidden" value="<?php echo ($dir == '') ? '/': $dir; ?>" />
                 <input id="create_directory_name" maxlength="255" name="directory[name]" type="text" value="" />
                 <input id="file_button" name="commit" type="submit" value="<?php echo __('Create'); ?>" />
@@ -139,6 +147,7 @@ if (!defined('IN_CMS')) { exit(); }
         </div>
         <div class="content">
             <form action="<?php echo get_url('plugin/file_manager/upload'); ?>" method="post" enctype="multipart/form-data">
+                <input id="csrf_token" name="csrf_token" type="hidden" value="<?php echo SecureToken::generateToken(BASE_URL.'plugin/file_manager/upload'); ?>" />
                 <input id="upload_overwrite" name="upload[overwrite]" type="checkbox" value="1" /> <label for="upload_overwrite"><small><?php echo __('overwrite it?'); ?></small></label><br />
                 <input id="upload_path" name="upload[path]" type="hidden" value="<?php echo ($dir == '') ? '/': $dir; ?>" />
                 <input id="upload_file" name="upload_file" type="file" />

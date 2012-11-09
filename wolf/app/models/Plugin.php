@@ -13,7 +13,7 @@
  *
  * @author Martijn van der Kleijn <martijn.niji@gmail.com>
  * @author Philippe Archambault <philippe.archambault@gmail.com>
- * 
+ *
  * @copyright Martijn van der Kleijn 2008-2010
  * @copyright Philippe Archambault 2008
  * @license http://www.gnu.org/licenses/gpl.html GPLv3 License
@@ -33,6 +33,7 @@ class Plugin {
 
     static $controllers = array();
     static $javascripts = array();
+    static $stylesheets = array();
 
     /**
      * Initialize all activated plugin by including is index.php file
@@ -66,6 +67,7 @@ class Plugin {
      * - license,
      * - update_url,
      * - require_wolf_version,
+     * - require_php_extensions,
      * - website
      *
      * @param infos array Assoc array with plugin informations
@@ -173,6 +175,37 @@ class Plugin {
         ksort(self::$plugins_infos);
         return self::$plugins_infos;
     }
+    
+    /**
+     * Given a plugin, checks a number of prerequisites as specified in plugin's setInfos().
+     *
+     * Possible checks:
+     *
+     * - require_wolf_version (a valid Wolf CMS version number)
+     * - require_php_extensions (comma seperated list of required extensions)
+     */
+    public static function hasPrerequisites($plugin, &$errors=array()) {
+        // Check require_wolf_version
+        if (isset($plugin->require_wolf_version) && version_compare($plugin->require_wolf_version, CMS_VERSION, '>')) {
+            $errors[] = __('The plugin requires a minimum of Wolf CMS version :v.', array(':v' => $plugin->require_wolf_version));
+        }
+        
+        // Check require_php_extension
+        if (isset($plugin->require_php_extensions)) {
+            $exts = explode(',', $plugin->require_php_extensions);
+            if(!empty($exts)) {
+                foreach ($exts as $ext) {
+                    if (trim($ext) !== '' && !extension_loaded($ext)) {
+                        $errors[] = __('One or more required PHP extension is missing: :exts', array(':exts', $plugin->require_php_extentions));
+                    }
+                }
+            }
+        }
+        
+        if (count($errors) > 0)
+            return false;
+        else return true;
+    }
 
     /**
      * Check the file mentioned as update_url for the latest plugin version available.
@@ -271,6 +304,19 @@ class Plugin {
             self::$javascripts[] = $plugin_id.'/'.$file;
         }
     }
+    
+    /**
+     * Add a stylesheet file to be added to the html page for a plugin.
+     * Backend only right now.
+     *
+     * @param $plugin_id    string  The folder name of the plugin
+     * @param $file         string  The path to the stylesheet file relative to plugin root
+     */
+    static function addStylesheet($plugin_id, $file) {
+        if (file_exists(PLUGINS_ROOT.'/' . $plugin_id . '/' . $file)) {
+            self::$stylesheets[] = $plugin_id.'/'.$file;
+        }
+    }
 
 
     static function hasSettingsPage($plugin_id) {
@@ -310,11 +356,13 @@ class Plugin {
 
         global $__CMS_CONN__;
         $tablename = TABLE_PREFIX.'plugin_settings';
-        $plugin_id = $__CMS_CONN__->quote($plugin_id);
 
-        $sql = "DELETE FROM $tablename WHERE plugin_id=$plugin_id";
+        $sql = "DELETE FROM $tablename WHERE plugin_id=:pluginid";
+
+        Record::logQuery($sql);
+
         $stmt = $__CMS_CONN__->prepare($sql);
-        return $stmt->execute();
+        return $stmt->execute(array(':pluginid' => $plugin_id));
     }
 
 
@@ -333,13 +381,15 @@ class Plugin {
 
         global $__CMS_CONN__;
         $tablename = TABLE_PREFIX.'plugin_settings';
-        $plugin_id = $__CMS_CONN__->quote($plugin_id);
 
         $existingSettings = array();
 
-        $sql = "SELECT name FROM $tablename WHERE plugin_id=$plugin_id";
+        $sql = "SELECT name FROM $tablename WHERE plugin_id=:pluginid";
+
+        Record::logQuery($sql);
+
         $stmt = $__CMS_CONN__->prepare($sql);
-        $stmt->execute();
+        $stmt->execute(array(':pluginid' => $plugin_id));
 
         while ($settingname = $stmt->fetchColumn())
             $existingSettings[$settingname] = $settingname;
@@ -348,18 +398,16 @@ class Plugin {
 
         foreach ($array as $name => $value) {
             if (array_key_exists($name, $existingSettings)) {
-                $name = $__CMS_CONN__->quote($name);
-                $value = $__CMS_CONN__->quote($value);
-                $sql = "UPDATE $tablename SET value=$value WHERE name=$name AND plugin_id=$plugin_id";
+                $sql = "UPDATE $tablename SET value=:value WHERE name=:name AND plugin_id=:pluginid";
             }
             else {
-                $name = $__CMS_CONN__->quote($name);
-                $value = $__CMS_CONN__->quote($value);
-                $sql = "INSERT INTO $tablename (value, name, plugin_id) VALUES ($value, $name, $plugin_id)";
+                $sql = "INSERT INTO $tablename (value, name, plugin_id) VALUES (:value, :name, :pluginid)";
             }
 
+            Record::logQuery($sql);
+
             $stmt = $__CMS_CONN__->prepare($sql);
-            $ret = $stmt->execute();
+            $ret = $stmt->execute(array(':pluginid' => $plugin_id, ':name' => $name, ':value' => $value));
         }
 
         return $ret;
@@ -381,30 +429,31 @@ class Plugin {
 
         global $__CMS_CONN__;
         $tablename = TABLE_PREFIX.'plugin_settings';
-        $plugin_id = $__CMS_CONN__->quote($plugin_id);
 
         $existingSettings = array();
 
-        $sql = "SELECT name FROM $tablename WHERE plugin_id=$plugin_id";
+        $sql = "SELECT name FROM $tablename WHERE plugin_id=:pluginid";
+
+        Record::logQuery($sql);
+
         $stmt = $__CMS_CONN__->prepare($sql);
-        $stmt->execute(array($plugin_id));
+        $stmt->execute(array(':pluginid' => $plugin_id));
 
         while ($settingname = $stmt->fetchColumn())
             $existingSettings[$settingname] = $settingname;
 
         if (in_array($name, $existingSettings)) {
-            $name = $__CMS_CONN__->quote($name);
-            $value = $__CMS_CONN__->quote($value);
-            $sql = "UPDATE $tablename SET value=$value WHERE name=$name AND plugin_id=$plugin_id";
+            $sql = "UPDATE $tablename SET value=:value WHERE name=:name AND plugin_id=:pluginid";
         }
         else {
-            $name = $__CMS_CONN__->quote($name);
-            $value = $__CMS_CONN__->quote($value);
-            $sql = "INSERT INTO $tablename (value, name, plugin_id) VALUES ($value, $name, $plugin_id)";
+            $sql = "INSERT INTO $tablename (value, name, plugin_id) VALUES (:value, :name, :pluginid)";
         }
 
+
+        Record::logQuery($sql);
+
         $stmt = $__CMS_CONN__->prepare($sql);
-        return $stmt->execute();
+        return $stmt->execute(array(':pluginid' => $plugin_id, ':name' => $name, ':value' => $value));
     }
 
     /**
@@ -418,13 +467,16 @@ class Plugin {
 
         global $__CMS_CONN__;
         $tablename = TABLE_PREFIX.'plugin_settings';
-        $plugin_id = $__CMS_CONN__->quote($plugin_id);
 
         $settings = array();
 
-        $sql = "SELECT name,value FROM $tablename WHERE plugin_id=$plugin_id";
+        $sql = "SELECT name,value FROM $tablename WHERE plugin_id=:pluginid";
+
+        Record::logQuery($sql);
+
         $stmt = $__CMS_CONN__->prepare($sql);
-        $stmt->execute();
+
+        $stmt->execute(array(':pluginid' => $plugin_id));
 
         while ($obj = $stmt->fetchObject()) {
             $settings[$obj->name] = $obj->value;
@@ -445,14 +497,15 @@ class Plugin {
 
         global $__CMS_CONN__;
         $tablename = TABLE_PREFIX.'plugin_settings';
-        $plugin_id = $__CMS_CONN__->quote($plugin_id);
-        $name = $__CMS_CONN__->quote($name);
 
         $existingSettings = array();
 
-        $sql = "SELECT value FROM $tablename WHERE plugin_id=$plugin_id AND name=$name LIMIT 1";
+        $sql = "SELECT value FROM $tablename WHERE plugin_id=:pluginid AND name=:name LIMIT 1";
+
+        Record::logQuery($sql);
+
         $stmt = $__CMS_CONN__->prepare($sql);
-        $stmt->execute();
+        $stmt->execute(array(':pluginid' => $plugin_id, ':name' => $name));
 
         return $stmt->fetchColumn();
     }

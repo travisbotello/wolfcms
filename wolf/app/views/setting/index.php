@@ -47,9 +47,10 @@
                             $loaded_plugins = Plugin::$plugins;
                             $loaded_filters = Filter::$filters;
                             foreach(Plugin::findAll() as $plugin):
-                                $disabled = (isset($plugin->require_wolf_version) && version_compare($plugin->require_wolf_version, CMS_VERSION, '>'));
+                                $errors = array();
+                                $disabled = !Plugin::hasPrerequisites($plugin, $errors);
                         ?>
-                        <tr<?php if ($disabled) echo ' class="disabled"'; ?>>
+                        <tr<?php if ($disabled === true) echo ' class="disabled"'; ?>>
                             <td class="plugin">
                                 <h4>
                                 <?php
@@ -60,7 +61,7 @@
                                 ?>
                                     <span class="from"><?php if (isset($plugin->author)) echo ' '.__('by').' '.$plugin->author; ?></span>
                                 </h4>
-                                <p><?php echo __($plugin->description); ?> <?php if ($disabled) echo '<span class="notes">'.__('This plugin CANNOT be enabled! It requires Wolf version :v.', array(':v' => $plugin->require_wolf_version)).'</span>'; ?></p>
+                                <p><?php echo __($plugin->description); ?> <?php if ($disabled === true) echo '<span class="notes">'.__('This plugin CANNOT be enabled!<br/>').implode('<br/>', $errors).'</span>'; ?></p>
                             </td>
                             <td class="pluginSettings">
                                 <?php
@@ -229,13 +230,14 @@ $(document).ready(function() {
     });
 
     // Dynamically uninstall
-    $('.uninstall a').click(function() {
+    $('.uninstall a').click(function(e) {
         if (confirm('<?php echo __('Are you sure you wish to uninstall this plugin?'); ?>')) {
             var pluginId = this.name.replace('uninstall_', '');
             $.get('<?php echo get_url('setting/uninstall_plugin/'); ?>'+pluginId, function() {
                 location.reload(true);
             });
         }
+        e.preventDefault();
     });
 
 });

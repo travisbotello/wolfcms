@@ -48,7 +48,7 @@ if (USE_MOD_REWRITE && isset($_GET['WOLFPAGE'])) {
     $admin_check = $_GET['WOLFPAGE'];
 }
 else {
-    $admin_check = urldecode($_SERVER['QUERY_STRING']);
+    $admin_check = !empty($_SERVER['QUERY_STRING']) ? urldecode($_SERVER['QUERY_STRING']) : '';
 }
 
 // Are we in frontend or backend?
@@ -179,8 +179,7 @@ Flash::init();
 $admin_routes = array (
     '/'.ADMIN_DIR          => Setting::get('default_tab'),
     '/'.ADMIN_DIR.'/'      => Setting::get('default_tab'),
-    '/'.ADMIN_DIR.'/:any'  => '$1',
-    '/'.ADMIN_DIR.'/:any/:all'  => '$1'
+    '/'.ADMIN_DIR.'/:all'  => '$1',
 );
 
 Dispatcher::addRoute($admin_routes);
