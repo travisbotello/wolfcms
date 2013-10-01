@@ -144,7 +144,7 @@ class UserController extends Controller {
             $data['email'] = '';
         }
 
-        if (!empty($data['language']) && !Validate::alpha($data['language'])) {
+        if (!empty($data['language']) && !Validate::alpha_dash($data['language'])) {
             $errors[] = __('Illegal value for :fieldname field!', array(':fieldname' => 'language'));
             // Reset to prevent XSS
             // @todo Remove hardcoded reset to 'en' language
@@ -171,7 +171,7 @@ class UserController extends Controller {
                 UserRole::setRolesFor($user->id, $_POST['user_role']);
 
             Flash::set('success', __('User has been added!'));
-            Observer::notify('user_after_add', $user->name);
+            Observer::notify('user_after_add', $user->name, $user->id);
         }
         else {
             Flash::set('error', __('User has not been added!'));
@@ -267,7 +267,7 @@ class UserController extends Controller {
             $errors[] = __('Illegal value for :fieldname field!', array(':fieldname' => 'email'));
         }
 
-        if (!empty($data['language']) && !Validate::alpha($data['language'])) {
+        if (!empty($data['language']) && !Validate::alpha_dash($data['language'])) {
             $errors[] = __('Illegal value for :fieldname field!', array(':fieldname' => 'language'));
         }
 
@@ -295,7 +295,7 @@ class UserController extends Controller {
             }
 
             Flash::set('success', __('User has been saved!'));
-            Observer::notify('user_after_edit', $user->name);
+            Observer::notify('user_after_edit', $user->name, $user->id);
         }
         else {
             Flash::set('error', __('User has not been saved!'));
@@ -344,7 +344,7 @@ class UserController extends Controller {
                     // delete user-roles relationship
                     UserRole::setRolesFor($user->id, array());
                     Flash::set('success', __('User <strong>:name</strong> has been deleted!', array(':name' => $user->name)));
-                    Observer::notify('user_after_delete', $user->name);
+                    Observer::notify('user_after_delete', $user->name, $user->id);
                 }
                 else {
                     Flash::set('error', __('User <strong>:name</strong> has not been deleted!', array(':name' => $user->name)));

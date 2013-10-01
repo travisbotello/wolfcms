@@ -9,11 +9,6 @@
  * Please see license.txt for the full license text.
  */
 
-/* Security measure */
-if (!defined('IN_CMS')) {
-    exit();
-}
-
 /**
  * The Archive plugin provides an Archive pagetype behaving similar to a blog or news archive.
  *
@@ -26,6 +21,11 @@ if (!defined('IN_CMS')) {
  * @copyright Philippe Archambault, 2008
  * @license http://www.gnu.org/licenses/gpl.html GPLv3 license
  */
+
+/* Security measure */
+if (!defined('IN_CMS')) {
+    exit();
+}
 
 /**
  * The Archive class...
@@ -84,7 +84,7 @@ class Archive {
     }
 
     private function _displayPage($slug) {
-        if (!$this->page = Page::findBySlug($slug, $this->page))
+        if (!$this->page = Page::findBySlug($slug, $this->page, true))
             pageNotFound($slug);
     }
 
@@ -171,10 +171,10 @@ class PageArchive extends Page {
     public function url($suffix=false) {
         $use_date = Plugin::getSetting('use_dates', 'archive');
         if ($use_date === '1') {
-            return BASE_URL . trim($this->parent()->uri() . date('/Y/m/d/', strtotime($this->created_on)) . $this->slug, '/') . ($this->uri() != '' ? URL_SUFFIX : '');
+            return BASE_URL . trim($this->parent()->path() . date('/Y/m/d/', strtotime($this->created_on)) . $this->slug, '/') . ($this->path() != '' ? URL_SUFFIX : '');
         }
         elseif ($use_date === '0') {
-            return BASE_URL . trim($this->parent()->uri() . '/' . $this->slug, '/') . ($this->uri() != '' ? URL_SUFFIX : '');
+            return BASE_URL . trim($this->parent()->path() . '/' . $this->slug, '/') . ($this->path() != '' ? URL_SUFFIX : '');
         }
     }
 
