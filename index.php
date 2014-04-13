@@ -199,6 +199,22 @@ $admin_routes = array (
     '/'.ADMIN_DIR.'/:all'  => '$1',
 );
 
+//AutoLoader::addFolder('/var/www/wolfcms/vendor/monolog/monolog/src');
+//AutoLoader::addFolder('/var/www/wolfcms/vendor/psr/log/src');
+require 'vendor/autoload.php';
+var_dump(AutoLoader::$folders);
+
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
+
+// create a log channel
+$log = new Logger('WolfCMS');
+$log->pushHandler(new StreamHandler('/var/www/wolfcms/wolfcms.log', Logger::WARNING));
+
+// add records to the log
+$log->addWarning('Foo');
+$log->addError('Bar');
+
 Dispatcher::addRoute($admin_routes);
 
 // run everything!

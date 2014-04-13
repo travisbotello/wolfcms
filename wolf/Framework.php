@@ -1348,7 +1348,7 @@ final class Observer {
  */
 class AutoLoader {
     protected static $files = array();
-    protected static $folders = array();
+    public static $folders = array();
 
     /**
      * Register the AutoLoader on the SPL autoload stack.
