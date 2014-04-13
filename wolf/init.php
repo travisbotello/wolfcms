@@ -4,8 +4,15 @@
 defined('IN_CMS') or exit;
 
 // Make sure we have a CMS_ROOT and CORE_ROOT.
-defined('CMS_ROOT') or define('CMS_ROOT', dirname(__FILE__));
-defined('CORE_ROOT') or define('CORE_ROOT', CMS_ROOT . DS . 'wolf');
+defined('CMS_ROOT') or exit;
+defined('CORE_ROOT') or exit;
+
+// What's our config file?
+$config_file = CMS_ROOT . DIRECTORY_SEPARATOR . 'config.php';
+
+// Include our basic files
+require_once $config_file;
+require_once CORE_ROOT . DIRECTORY_SEPARATOR . 'utils.php';
 
 // Check if Wolf CMS was installed or not.
 if (!defined('DEBUG')) {
@@ -26,19 +33,21 @@ define('REMEMBER_LOGIN_LIFETIME', 1209600); // two weeks
 define('DEFAULT_CONTROLLER', 'page');
 define('DEFAULT_ACTION', 'index');
 
-// Include our required files
-$config_file = CMS_ROOT . DS . 'config.php';
-require_once CORE_ROOT . DS . 'utils.php';
-require_once $config_file;
-
-// Define our URL constants
-// @todo Load framework first?
-CmsInit::defineUrlConstants();
-
+// Load framework
 require CORE_ROOT . DS . 'Framework.php';
 
+// Define our URL constants
+CmsInit::defineUrlConstants();
+
+// Setup DB connection
 CmsInit::dbConnection();
 
+// Make sure our models and such are loaded
+AutoLoader::register();
+AutoLoader::addFolder(CORE_ROOT . '/app/models/');
+AutoLoader::addFolder(CORE_ROOT . '/app/controllers/');
+
+// Initialiaze CMS settings
 Setting::init();
 
 // Load logged in user's preferred language or use default language
@@ -67,7 +76,7 @@ class CmsInit {
         // @todo improve
         $changedurl = str_replace('//', '|', URL_PUBLIC);
         $lastslash = strpos($changedurl, '/');
-        define('URI_PUBLIC', false === $lastslash ? '/' : substr($changedurl, $lastslash));
+        define('PATH_PUBLIC', false === $lastslash ? '/' : substr($changedurl, $lastslash));
 
         // Determine URI for backend check
         if (USE_MOD_REWRITE && isset($_GET['WOLFPAGE'])) {
@@ -87,16 +96,16 @@ class CmsInit {
             define('BASE_URL', rtrim($url, '/') . '/' . (USE_MOD_REWRITE ? '' : '?/') . rtrim(ADMIN_DIR, '/') . '/');
             # TODO next line seems to be wrong. really URI_PUBLIC followed by a $url check?  
             #define('BASE_URI', URI_PUBLIC . (endsWith($url, '/') ? '': '/') . (USE_MOD_REWRITE ? '': '?/') . rtrim(ADMIN_DIR, '/') . '/');
-            define('BASE_URI', rtrim(URI_PUBLIC, '/') . '/' . (USE_MOD_REWRITE ? '' : '?/') . rtrim(ADMIN_DIR, '/') . '/');
+            define('BASE_URI', rtrim(PATH_PUBLIC, '/') . '/' . (USE_MOD_REWRITE ? '' : '?/') . rtrim(ADMIN_DIR, '/') . '/');
         } else {
             define('BASE_URL', rtrim(URL_PUBLIC, '/') . '/' . (USE_MOD_REWRITE ? '' : '?'));
-            define('BASE_URI', rtrim(URI_PUBLIC, '/') . '/' . (USE_MOD_REWRITE ? '' : '?'));
+            define('BASE_URI', rtrim(PATH_PUBLIC, '/') . '/' . (USE_MOD_REWRITE ? '' : '?'));
         }
 
-        define('PLUGINS_URI', URI_PUBLIC . 'wolf/plugins/');
+        define('PLUGINS_PATH', PATH_PUBLIC . 'wolf/plugins/');
         defined('THEMES_ROOT') or define('THEMES_ROOT', CMS_ROOT . DS . 'public' . DS . 'themes' . DS);
-        defined('THEMES_URI') or define('THEMES_URI', URI_PUBLIC . 'public/themes/');
-        defined('ICONS_URI') or define('ICONS_URI', URI_PUBLIC . 'wolf/icons/');
+        defined('THEMES_PATH') or define('THEMES_PATH', PATH_PUBLIC . 'public/themes/');
+        defined('ICONS_PATH') or define('ICONS_PATH', PATH_PUBLIC . 'wolf/icons/');
     }
 
     public static function securityCheckConfigFile($config_file) {

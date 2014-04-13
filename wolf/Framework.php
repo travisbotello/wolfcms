@@ -1599,6 +1599,14 @@ class AutoLoader {
         }
         self::$folders = array_merge(self::$folders, $folder);
     }
+    
+    public static function getFolders() {
+        return self::$folders;
+    }
+    
+    public static function getFiles() {
+        return self::$files;
+    }
 
     /**
      * Loads a requested class.
