@@ -2,6 +2,9 @@
     "name": "wolfcms/wolfcms",
     "description": "The Wolf CMS core system.",
     "license": "GPL-3.0+",
+    "config": {
+        "vendor-dir": "wolf/lib"
+    },
     "repositories": [
         {
             "type": "composer",

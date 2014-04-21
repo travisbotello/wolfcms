@@ -30,6 +30,29 @@ require_once($config_file);
 // if you have installed wolf and see this line, you can comment it or delete it :)
 if ( ! defined('DEBUG')) { header('Location: wolf/install/'); exit(); }
 
+// Set default timezone
+if ( ! defined('DEFAULT_TIMEZONE')) { define('DEFAULT_TIMEZONE', 'UTC'); }
+date_default_timezone_set(DEFAULT_TIMEZONE);
+
+// Setup basic logging if not done in config file
+if (!defined('LOCATION_LOG')) { define('LOCATION_LOG', CMS_ROOT.'/log'); }
+
+require CORE_ROOT.'/lib/autoload.php';
+
+use Monolog\Logger;
+use Monolog\Handler\RotatingFileHandler;
+
+// create the main logger channel
+$log = new Logger('WolfCMS');
+$log->pushHandler(new RotatingFileHandler(LOCATION_LOG.'/main.log', 30, Logger::DEBUG));
+
+// create a security entries logger channel
+$seclog = new Logger('WolfSec');
+$seclog->pushHandler(new RotatingFileHandler(LOCATION_LOG.'/security.log', 30, Logger::DEBUG));
+
+$log->addInfo('---- Start Run ------------------------------------------');
+// end logging setup
+
 $url = URL_PUBLIC;
 
 // Figure out what the public path is based on URL_PUBLIC.
@@ -48,6 +71,7 @@ define('URI_PUBLIC', PATH_PUBLIC);
 
 // Determine path for backend check
 if (USE_MOD_REWRITE && isset($_GET['WOLFPAGE'])) {
+    $log->addInfo('Enabling mod_rewrite');
     $admin_check = $_GET['WOLFPAGE'];
 }
 else {
@@ -56,6 +80,7 @@ else {
 
 // Are we in frontend or backend?
 if (startsWith($admin_check, ADMIN_DIR) || startsWith($admin_check, '/'.ADMIN_DIR) || isset($_GET['WOLFAJAX'])) {
+    $log->addInfo('Entering backend administration interface');
     define('CMS_BACKEND', true);
     if (defined('USE_HTTPS') && USE_HTTPS) {
         $url = str_replace('http://', 'https://', $url);
@@ -64,6 +89,7 @@ if (startsWith($admin_check, ADMIN_DIR) || startsWith($admin_check, '/'.ADMIN_DI
     define('BASE_PATH', PATH_PUBLIC . (endsWith($url, '/') ? '': '/') . (USE_MOD_REWRITE ? '': '?/') . ADMIN_DIR . (endsWith(ADMIN_DIR, '/') ? '': '/'));
 }
 else {
+    $log->addInfo('Entering website frontend');
     define('BASE_URL', URL_PUBLIC . (endsWith(URL_PUBLIC, '/') ? '': '/') . (USE_MOD_REWRITE ? '': '?'));
     define('BASE_PATH', PATH_PUBLIC . (endsWith(PATH_PUBLIC, '/') ? '': '/') . (USE_MOD_REWRITE ? '': '?'));
 }
@@ -82,6 +108,7 @@ define('PLUGINS_URI', PLUGINS_PATH);
 define('ICONS_URI', ICONS_PATH);
 
 // Security checks -----------------------------------------------------------
+$log->addInfo('Checking config.php permissions');
 if (DEBUG == false && isWritable($config_file)) {
     $lock = false;
     // Windows systems always have writable config files... skip those.
@@ -107,6 +134,7 @@ if (DEBUG == false && isWritable($config_file)) {
     }
 
     if ($lock) {
+        $seclog->addInfo('The config.php file was found to be writable. Please check docs.wolfcms.org on how to fix this.');
         echo '<html><head><title>Wolf CMS automatically disabled!</title></head><body>';
         echo '<h1>Wolf CMS automatically disabled!</h1>';
         echo '<p>Wolf CMS has been disabled as a security precaution.</p>';
@@ -125,8 +153,10 @@ define('REMEMBER_LOGIN_LIFETIME', 1209600); // two weeks
 define('DEFAULT_CONTROLLER', 'page');
 define('DEFAULT_ACTION', 'index');
 
+$log->addInfo('Loading Framework');
 require CORE_ROOT.DS.'Framework.php';
 
+$log->addInfo('Registering Wolf CMS autoloader');
 AutoLoader::register();
 
 AutoLoader::addFolder(array(
@@ -135,9 +165,11 @@ AutoLoader::addFolder(array(
 ));
 
 try {
+    $log->addInfo('Connecting with database');
     $__CMS_CONN__ = new PDO(DB_DSN, DB_USER, DB_PASS);
 }
 catch (PDOException $error) {
+    $log->addError('Failed to make connection with database.', array('errorMessage' => $error->getMessage()));
     die('DB Connection failed: '.$error->getMessage());
 }
 
@@ -163,6 +195,7 @@ $__FROG_CONN__ = $__CMS_CONN__;
 Record::connection($__CMS_CONN__);
 Record::getConnection()->exec("set names 'utf8'");
 
+$log->addInfo('Loading settings from database');
 Setting::init();
 
 use_helper('I18n');
@@ -189,6 +222,7 @@ if (defined('USE_POORMANSCRON') && USE_POORMANSCRON && defined('POORMANSCRON_INT
     }
 }
 
+$log->addInfo('Loading plugins');
 Plugin::init();
 Flash::init();
 
@@ -199,23 +233,9 @@ $admin_routes = array (
     '/'.ADMIN_DIR.'/:all'  => '$1',
 );
 
-//AutoLoader::addFolder('/var/www/wolfcms/vendor/monolog/monolog/src');
-//AutoLoader::addFolder('/var/www/wolfcms/vendor/psr/log/src');
-require 'vendor/autoload.php';
-var_dump(AutoLoader::$folders);
-
-use Monolog\Logger;
-use Monolog\Handler\StreamHandler;
-
-// create a log channel
-$log = new Logger('WolfCMS');
-$log->pushHandler(new StreamHandler('/var/www/wolfcms/wolfcms.log', Logger::WARNING));
-
-// add records to the log
-$log->addWarning('Foo');
-$log->addError('Bar');
-
+$log->addInfo('Setup internal routing');
 Dispatcher::addRoute($admin_routes);
 
 // run everything!
+$log->addInfo('Run core');
 require APP_PATH.DS.'main.php';
