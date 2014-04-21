@@ -1,17 +1,13 @@
 <?php
 
-    /**
-     * Finnish file for plugin markdown
-     *
-     * @package Plugins
-     * @subpackage markdown
-     *
-	 * @author Petri Ikonen <petri.ikonen@kuopassa.com>
-	 * @version Wolf x.y.z
-	 * @link http://www.kuopassa.com/
-     */
+/**
+ * Wolf CMS markdown plugin language file
+ *
+ * @package Translations
+ */
 
-    return array(
-    'Allows you to use the Markdown text filter.' => 'Mahdollistaa Markdown-muotoilukielen k&auml;ytt&auml;misen.',
-	'Markdown filter' => 'Markdown-suodin',
-    );
+return array(
+    'Allows you to use the Markdown text filter (with MarkdownExtra and Smartypants).' => 'Mahdollistaa Markdown-muotoilukielen käyttämisen (MarkdownExtran ja Smartypantsin kera).',
+    'Markdown filter' => 'Markdown-suodin',
+    'Markdown' => 'Markdown'
+);

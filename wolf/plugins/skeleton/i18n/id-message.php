@@ -15,5 +15,5 @@ return array(
     'Put something here, or leave out the sidebar entirely.' => 'Taruh sesuatu disini, atau tinggalkan seluruh sidebar/panel samping.',
     'Settings' => 'Pengaturan',
     'Skeleton' => 'Skeleton',
-    'You have modified this page.  If you navigate away from this page without first saving your data, the changes will be lost.' => 'You have modified this page.  If you navigate away from this page without first saving your data, the changes will be lost.'
+    'You have modified this page.  If you navigate away from this page without first saving your data, the changes will be lost.' => 'Anda sudah merubah halaman ini. Jika anda meninggalkan halaman ini tanpa menyimpannya terlebih dahulu, maka semua yang anda rubah tidak akan disimpan.'
 );

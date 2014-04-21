@@ -7,6 +7,6 @@
  */
 
 return array(
-    'Page not found' => 'Sidan hittades ej',
-    'Provides Page not found page types.' => 'Erbjuder sidtyper av Sidan hittades ej.'
+    'Page not found' => 'Sida ej hittad',
+    'Provides Page not found page types.' => 'Erbjuder Sida ej hittad former.'
 );

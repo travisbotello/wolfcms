@@ -53,7 +53,7 @@ return array(
     'Umask:' => 'Umask:',
     'Upload' => 'Upload',
     'Upload file' => 'Upload fişier',
-    'Yes' => 'Yes',
+    'Yes' => 'Da',
     'You do not have permission to access the requested page!' => 'Nu ai permisiuni suficiente pentru a accesa pagina cerută!',
     'You do not have sufficient permissions to change the permissions on a file or directory.' => 'You do not have sufficient permissions to change the permissions on a file or directory.',
     'You do not have sufficient permissions to create a directory.' => 'You do not have sufficient permissions to create a directory.',

@@ -7,6 +7,6 @@
  */
 
 return array(
-    'Page not found' => 'Page not found',
-    'Provides Page not found page types.' => 'Provides Page not found page types.'
+    'Page not found' => 'Página não encontrada!',
+    'Provides Page not found page types.' => 'Fornece a mensagem "Página não encontrada".'
 );

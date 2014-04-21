@@ -7,7 +7,7 @@
  */
 
 return array(
-    'Allows you to use the Textile text filter.' => 'Allows you to use the Textile text filter.',
+    'Allows you to use the Textile text filter.' => 'Позволяет использовать фильтр Textile.',
     'Textile filter' => 'Фильтр Textile',
     'Textile' => 'Textile'
 );

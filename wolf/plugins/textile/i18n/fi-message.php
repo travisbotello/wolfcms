@@ -1,17 +1,13 @@
 <?php
 
-    /**
-     * Finnish file for plugin textile
-     *
-     * @package Plugins
-     * @subpackage textile
-     *
-	 * @author Petri Ikonen <petri.ikonen@kuopassa.com>
-	 * @version Wolf x.y.z
-	 * @link http://www.kuopassa.com/
-     */
+/**
+ * Wolf CMS textile plugin language file
+ *
+ * @package Translations
+ */
 
-    return array(
-    	'Allows you to use the Textile text filter.' => 'Mahdollistaa Textile-muotoilukielen k&auml;ytt&auml;misen.',
-	'Textile filter' => 'Textile-suodin',
-    );
+return array(
+    'Allows you to use the Textile text filter.' => 'Mahdollistaa Textile-suotimen käyttämisen.',
+    'Textile filter' => 'Textile-suodin',
+    'Textile' => 'Textile'
+);

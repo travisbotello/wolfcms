@@ -9,7 +9,7 @@
 return array(
     'A file or directory with that name already exists!' => 'A file or directory with that name already exists!',
     'A possible hack attempt was detected.' => 'A possible hack attempt was detected.',
-    'Are you sure you wish to delete?' => 'Are you sure you wish to delete?',
+    'Are you sure you wish to delete?' => 'Ste prepričani, da želite izbrisati?',
     'Cancel' => 'Prekliči',
     'Change mode' => 'Change mode',
     'Close' => 'Close',

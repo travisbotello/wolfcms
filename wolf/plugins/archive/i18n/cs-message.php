@@ -13,7 +13,7 @@ return array(
     'Do you want to generate dates for the URLs?' => 'Chcete generovat data pro adresy URL?',
     'Generate dates' => 'Generovat data',
     'No' => 'Ne',
-    'Provides an Archive pagetype behaving similar to a blog or news archive.' => 'Provides an Archive pagetype behaving similar to a blog or news archive.',
+    'Provides an Archive pagetype behaving similar to a blog or news archive.' => 'Poskytne typ stránek archiv, který se chová obdobně jako archiv článků nebo novinek.',
     'Save' => 'Uložit',
     'Settings' => 'Nastavení',
     'The settings have been saved.' => 'Nastavení bylo uloženo.',

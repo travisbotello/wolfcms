@@ -15,5 +15,5 @@ return array(
     'Put something here, or leave out the sidebar entirely.' => 'Напишите что-нибудь здесь или оставьте пустым',
     'Settings' => 'Настройки',
     'Skeleton' => 'Скелет',
-    'You have modified this page.  If you navigate away from this page without first saving your data, the changes will be lost.' => 'You have modified this page.  If you navigate away from this page without first saving your data, the changes will be lost.'
+    'You have modified this page.  If you navigate away from this page without first saving your data, the changes will be lost.' => 'Вы изменили страницу. если вы уйдете отсюда без сохранения, изменения будут потеряны.'
 );

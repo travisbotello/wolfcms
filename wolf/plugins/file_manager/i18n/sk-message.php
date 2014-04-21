@@ -53,7 +53,7 @@ return array(
     'Umask:' => 'Umask:',
     'Upload' => 'Nahrať',
     'Upload file' => 'Nahrať súbor',
-    'Yes' => 'Yes',
+    'Yes' => 'Áno',
     'You do not have permission to access the requested page!' => 'Nemáte práva na prístup k požadovanej stránke!',
     'You do not have sufficient permissions to change the permissions on a file or directory.' => 'You do not have sufficient permissions to change the permissions on a file or directory.',
     'You do not have sufficient permissions to create a directory.' => 'You do not have sufficient permissions to create a directory.',

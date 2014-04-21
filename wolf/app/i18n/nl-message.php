@@ -91,7 +91,7 @@ return array(
     'Leave password blank for it to remain unchanged.' => 'Laat wachtwoord leeg om het ongewijzigd te laten.',
     'Log Out' => 'Log uit',
     'Login' => 'Log in',
-    'Login failed. Check your username and password.<br/>If you tried to login more than :attempts times, you will have to wait at least :delay seconds before trying again.' => 'Het inloggen is mislukt. Controleer uw gebruikersnaam en paswoord.<br/>Indien u meer dan :attempts keren probeerde in te loggen, dient u tenminste :delay seconden te wachten voordat u het opnieuw probeert.',
+    'Login failed. Check your username and password.<br/>If you tried to login more than :attempts times, you will have to wait at least :delay seconds before trying again.' => 'Het inloggen is mislukt. Controleer uw gebruikersnaam en wachtwoord.<br/>Indien u meer dan :attempts keren probeerde in te loggen, dient u tenminste :delay seconden te wachten voordat u het opnieuw probeert.',
     'Login:' => 'Login:',
     'MSG_PAGE_DELETED_SUCCESS' => 'Pagina :title is verwijderd!',
     'MSG_SNIPPETS' => 'Snippers',

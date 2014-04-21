@@ -7,9 +7,9 @@
  */
 
 return array(
-    'An error occurred trying to save the settings.' => 'An error occured trying to save the settings.',
+    'An error occurred trying to save the settings.' => 'Ocorreu um erro ao tentar salvar a não settings.Could salvar as configurações, sem definições encontradas.',
     'Archive' => 'Arquivo',
-    'Could not save settings, no settings found.' => 'Could not save settings, no settings found.',
+    'Could not save settings, no settings found.' => 'Não foi possível salvar as configurações, sem definições encontradas.',
     'Do you want to generate dates for the URLs?' => 'Voc&ecirc; quer gerar datas para as URLs',
     'Generate dates' => 'Gerar datas',
     'No' => 'N&atilde;o',

@@ -14,6 +14,6 @@ return array(
     'Provides a basic plugin implementation. (try enabling it!)' => 'Fornisce un\'implementazione di base per un plugin. (prova ad abilitarlo!)',
     'Put something here, or leave out the sidebar entirely.' => 'Metti qualcosa qui, o lascia la barra laterale vuota.',
     'Settings' => 'Impostazioni',
-    'Skeleton' => 'Scheletro',
-    'You have modified this page.  If you navigate away from this page without first saving your data, the changes will be lost.' => 'Questa pagina è stata modificata.  Ogni modifica non salvata verrà perduta.'
+    'Skeleton' => 'Skeleton',
+    'You have modified this page.  If you navigate away from this page without first saving your data, the changes will be lost.' => 'Hai modificato questa pagina.  Se esci da questa pagina senza prima salvare i dati, le modifiche andranno perse.'
 );

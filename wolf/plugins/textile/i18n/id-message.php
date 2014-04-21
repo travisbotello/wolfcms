@@ -7,7 +7,7 @@
  */
 
 return array(
-    'Allows you to use the Textile text filter.' => 'Allows you to use the Textile text filter.',
-    'Textile filter' => 'Textile filter',
+    'Allows you to use the Textile text filter.' => 'Memungkinkan anda untuk menggunakan filter teks Textile.',
+    'Textile filter' => 'Filter Textile ',
     'Textile' => 'Textile'
 );

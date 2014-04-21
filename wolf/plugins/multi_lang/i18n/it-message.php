@@ -12,11 +12,11 @@ return array(
     'General' => 'Generale',
     'Get the language preference from the HTTP header (default), the uri (/nl/about.html for the Dutch version of about.html) or from the stored preference of a logged in user.' => 'Ottieni le preferenze della lingua dall\'header HTTP (predefinito), l\'uri (/it/about.html per la versione italiana di about.html) o dalle preferenze salvate degli utenti connessi.',
     'HTTP_ACCEPT_LANG header' => 'Header HTTP_ACCEPT_LANG',
-    'Language source' => 'Sorgente della lingua',
+    'Language source' => 'Lingua di partenza',
     'Multiple Language Documentation' => 'Documentazione Multilingua',
     'Multiple Language Settings' => 'Impostazioni Multilingua',
     'Multiple Languages' => 'Multilingua',
-    'Provides language specific content when available based on user preferences.' => 'Fornisce contenuto multilingua quando disponibile, in base alle preferenze dell\'utente.',
+    'Provides language specific content when available based on user preferences.' => 'Fornisce contenuti specifici nella lingua quando disponibili in base alle preferenze dell\'utente.',
     'Save' => 'Salva',
     'Settings' => 'Impostazioni',
     'Style' => 'Stile',
@@ -25,5 +25,5 @@ return array(
     'Translations as tab' => 'Traduzioni come scheda',
     'URI' => 'URI',
     'Wolf CMS user preferences' => 'Preferenze dell\'utente di Wolf CMS',
-    'You have modified this page.  If you navigate away from this page without first saving your data, the changes will be lost.' => 'La pagina è stata modificata.  Ogni modifica non salvata verrà perduta.'
+    'You have modified this page.  If you navigate away from this page without first saving your data, the changes will be lost.' => 'Hai modificato questa pagina.  Se esci da questa pagina senza prima salvare i dati, le modifiche andranno perse.'
 );

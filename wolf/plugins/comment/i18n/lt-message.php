@@ -56,7 +56,7 @@ return array(
     'Unable to drop table :tablename' => 'Negalima pašalinti duomenų bazės lentelės pavadinimu :tablename',
     'Use captcha' => 'Naudoti paveiksliuką su kodu',
     'Yes' => 'Taip',
-    'You have modified this page.  If you navigate away from this page without first saving your data, the changes will be lost.' => 'You have modified this page.  If you navigate away from this page without first saving your data, the changes will be lost.',
+    'You have modified this page.  If you navigate away from this page without first saving your data, the changes will be lost.' => 'Jūs paredagavote šį puslapį. Jeigu jūs uždarysite šį puslapį neišsaugoję duomenų, tuomet visi pakeitimai dings.',
     'about' => 'apie',
     'comment not found!' => 'komentaras nerastas!',
     'none' => 'nieko',

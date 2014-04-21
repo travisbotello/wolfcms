@@ -16,14 +16,14 @@ return array(
     'Multiple Language Documentation' => 'Multiple Language Documentatie',
     'Multiple Language Settings' => 'Multiple Language Instellingen',
     'Multiple Languages' => 'Multiple Languages',
-    'Provides language specific content when available based on user preferences.' => 'Biedt taal specifieke inhoud op beschikbaarheid via de voorkeursinstelling van een gebruiker.',
+    'Provides language specific content when available based on user preferences.' => 'Biedt taal-specifieke inhoud (indien beschikbaar) gebaseerd op de voorkeuren van de gebruiker.',
     'Save' => 'Bewaar',
     'Settings' => 'Instellingen',
     'Style' => 'Stijl',
     'The settings have been updated.' => 'De instellingen zijn bijgewerkt.',
     'Translations as page copy' => 'Vertaling als pagina kopie',
-    'Translations as tab' => 'Vertaling als tab',
+    'Translations as tab' => 'Vertaling als tabblad',
     'URI' => 'URI',
-    'Wolf CMS user preferences' => 'Wolf CMS gebruiker voorkeur',
+    'Wolf CMS user preferences' => 'Wolf CMS gebruikersvoorkeuren',
     'You have modified this page.  If you navigate away from this page without first saving your data, the changes will be lost.' => 'Je hebt deze pagina gewijzigd. Als je hiervandaan gaat zonder je instellingen te bewaren zullen je wijzigingen verloren gaan.'
 );

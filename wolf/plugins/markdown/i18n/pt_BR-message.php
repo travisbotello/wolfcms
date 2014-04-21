@@ -7,7 +7,7 @@
  */
 
 return array(
-    'Allows you to use the Markdown text filter (with MarkdownExtra and Smartypants).' => 'Allows you to use the Markdown text filter (with MarkdownExtra and Smartypants).',
-    'Markdown filter' => 'Markdown filter',
+    'Allows you to use the Markdown text filter (with MarkdownExtra and Smartypants).' => 'Permite que você use o filtro de texto Markdown (com MarkdownExtra e Smartypants).',
+    'Markdown filter' => 'Filtro de texto Markdown',
     'Markdown' => 'Markdown'
 );
