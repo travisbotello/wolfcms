@@ -18,6 +18,19 @@
 
 use_helper('Gravatar');
 ?>
+
+<script>
+    angular.module('wolfuser', [ ])
+    
+    .controller('BeerCounter', function($scope, $locale) {
+        $scope.beerForms = {
+        0: 'žiadne pivo',
+        one: '{} pivo',
+        few: '{} pivá',
+        other: '{} pív'
+    });
+</script>
+
 <h1><?php echo __('Users'); ?></h1>
 
 <table id="users" class="index" cellpadding="0" cellspacing="0" border="0">
